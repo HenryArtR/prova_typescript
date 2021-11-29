@@ -3,31 +3,26 @@ let car: Car;
 
 function submitCar() {
     let errores = 0;
-    let numeroMatricula = /^[A-Z]{1,2}\s\d{4}\s([B-D]|[F-H]|[J-N]|[P-T]|[V-Z]){3}$/;
-    let soloLetras = /^[a-zA-Z]$/
+    let numeroMatricula = /^[A-Z]{1,2}\s\d{4}\s([B-D]|[F-H]|[J-N]|[P-T]|[V-Z]){3}$/i;
+    let soloLetras = /^[A-Z]+$/i;
     let plateInput = <HTMLInputElement>document.getElementById("plateInput");
     let brandInput = <HTMLInputElement>document.getElementById("brandInput");
     let colorInput = <HTMLInputElement>document.getElementById("colorInput");
 
 	//EX1. Validar los campos de matricula, marca y color, antes de hacer el new Car
-    if(plateInput.value == "" || numeroMatricula.test(plateInput.value)){
-        errores++
-        alert('Introduce la matricula correctamente (ES 1234 BBB)')
+    if(!plateInput.value || !numeroMatricula.test(plateInput.value)){
+        alert('Introduce la matricula correctamente (AA 1234 AAA)')
         return false
-    }else if(brandInput.value == "" || soloLetras.test(brandInput.value) || brandInput.value.length < 3){
-        errores++
+    }else if(!brandInput.value || !soloLetras.test(brandInput.value) || brandInput.value.length < 3){
         alert('Introduce la marca correctamente')
         return false
-    }else if(colorInput.value == "" || soloLetras.test(colorInput.value) || colorInput.value.length < 3){
-        errores++
+    }else if(!colorInput.value || !soloLetras.test(colorInput.value) || colorInput.value.length < 3){
         alert('Introduce el color correctamente')
         return false
     }
-    console.log(errores)
 	car = new Car(plateInput.value, colorInput.value, brandInput.value);
     showVehicle();
     showWheelForm();
-    return true
 }
 
 function showVehicle() {
@@ -45,27 +40,31 @@ function showVehicle() {
 
 function submitWheelForm() {
     let errores = 0;
-	
+    
 	//EX2. Solo hacer el "new Wheel" si las 4 ruedas son correctas
 	//EX3. Una rueda correcta deberá tener un diámetro entre 1 y 2. Crear una función para validarlas
     
 	for (let i = 1; i <= 4; i++) {
 		let brandWheel = <HTMLInputElement>document.getElementById("brandWheel" + i);
 		let diameterWheel = <HTMLInputElement>document.getElementById("diameterWheel" + i);
-
-		let wheel_generica = new Wheel(Number(diameterWheel.value), brandWheel.value);
-		car.addWheel(wheel_generica);
-
-        if(wheel_generica.diameter != 1 && wheel_generica.diameter != 2){
-            alert("El diametro de la rueda ha de ser entre 1 y 2")
+        if(validarRuedas(diameterWheel.value)==true){
+            let wheel_generica = new Wheel(Number(diameterWheel.value), brandWheel.value);
+            car.addWheel(wheel_generica);
+        }else{
             return false
-        }    
+        }	
 	}
-	console.log(car)
-	showWheels();
+    showWheels();
     return true
 }
-
+function validarRuedas(diametro: string){
+    let diametroValido = /^[1-2]$/
+    if(!diametroValido.test(diametro) || !diametro){ 
+        alert("El diametro de la rueda ha de ser entre 1 y 2")
+        return false
+    }
+    return true
+}
 
 function showWheels() {
 	//EX4. Optimizar la función showWheels
