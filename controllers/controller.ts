@@ -47,19 +47,21 @@ function submitWheelForm() {
     
 	//EX2. Solo hacer el "new Wheel" si las 4 ruedas son correctas
 	//EX3. Una rueda correcta deberá tener un diámetro entre 1 y 2. Crear una función para validarlas
-    
-	for (let i = 1; i <= 4; i++) {
-		let brandWheel = <HTMLInputElement>document.getElementById("brandWheel" + i);
-		let diameterWheel = <HTMLInputElement>document.getElementById("diameterWheel" + i);
+    for (let i = 1; i <= 4; i++) {
+        let diameterWheel = <HTMLInputElement>document.getElementById("diameterWheel" + i);
         if(validarRuedas(Number(diameterWheel.value)) == false){
             errores++
         }
-        if(errores == 0){
-            let wheel_generica = new Wheel(Number(diameterWheel.value), brandWheel.value);
-            car.addWheel(wheel_generica);
-        }   
-	}
+    }
     if(errores == 0){
+        for (let i = 1; i <= 4; i++) {
+            let brandWheel = <HTMLInputElement>document.getElementById("brandWheel" + i);
+            let diameterWheel = <HTMLInputElement>document.getElementById("diameterWheel" + i);
+
+            let wheel_generica = new Wheel(Number(diameterWheel.value), brandWheel.value);
+            car.addWheel(wheel_generica);    
+        }
+
         showWheels();
     }
 }
