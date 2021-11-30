@@ -11,18 +11,22 @@ function submitCar() {
 
 	//EX1. Validar los campos de matricula, marca y color, antes de hacer el new Car
     if(!plateInput.value || !numeroMatricula.test(plateInput.value)){
-        alert('Introduce la matricula correctamente (AA 1234 AAA)')
-        return false
+        alert('Introduce la matricula correctamente (BB 1234 BBB)')
+        errores++
     }else if(!brandInput.value || !soloLetras.test(brandInput.value) || brandInput.value.length < 3){
         alert('Introduce la marca correctamente')
-        return false
+        errores++
     }else if(!colorInput.value || !soloLetras.test(colorInput.value) || colorInput.value.length < 3){
         alert('Introduce el color correctamente')
-        return false
+        errores++
     }
-	car = new Car(plateInput.value, colorInput.value, brandInput.value);
-    showVehicle();
-    showWheelForm();
+
+    if(errores == 0){
+        car = new Car(plateInput.value, colorInput.value, brandInput.value);
+        showVehicle();
+        showWheelForm();
+    }
+	
 }
 
 function showVehicle() {
@@ -47,19 +51,20 @@ function submitWheelForm() {
 	for (let i = 1; i <= 4; i++) {
 		let brandWheel = <HTMLInputElement>document.getElementById("brandWheel" + i);
 		let diameterWheel = <HTMLInputElement>document.getElementById("diameterWheel" + i);
-        if(validarRuedas(diameterWheel.value)==true){
+        if(validarRuedas(Number(diameterWheel.value)) == false){
+            errores++
+        }
+        if(errores == 0){
             let wheel_generica = new Wheel(Number(diameterWheel.value), brandWheel.value);
             car.addWheel(wheel_generica);
-        }else{
-            return false
-        }	
+        }   
 	}
-    showWheels();
-    return true
+    if(errores == 0){
+        showWheels();
+    }
 }
-function validarRuedas(diametro: string){
-    let diametroValido = /^[1-2]$/
-    if(!diametroValido.test(diametro) || !diametro){ 
+function validarRuedas(diametro: number){
+    if(diametro != 1 && diametro != 2){ 
         alert("El diametro de la rueda ha de ser entre 1 y 2")
         return false
     }
